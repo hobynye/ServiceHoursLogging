@@ -11,7 +11,13 @@ auth.onAuthStateChanged(user => {
 
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            console.log("Signed in as:", result.user.displayName);
+        })
+        .catch((error) => {
+            console.error("Login error:", error);
+        });
 }
 
 function logout() {
