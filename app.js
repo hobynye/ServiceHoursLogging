@@ -75,6 +75,10 @@ async function loadOrganizations() {
 }
 */
 
+if (typeof firebase === 'undefined') {
+    alert("Firebase SDK not loaded!");
+}
+
 function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
