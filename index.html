@@ -67,6 +67,13 @@
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            const email = user.email || "";
+            if (!email.endsWith("@hobynye.org")) {
+                alert("Only @hobynye.org emails are allowed.");
+                await signOut(auth);
+                return;
+            }
+
             document.getElementById("user-info").textContent = `Welcome, ${user.displayName}`;
             document.getElementById("log-container").style.display = "block";
             loginBtn.style.display = "none";
@@ -82,14 +89,19 @@
     });
 
     async function populateOrganizations() {
+        const user = auth.currentUser;
         const orgSelect = document.getElementById("org-select");
         orgSelect.innerHTML = `<option value="">-- Add new organization --</option>`;
         const snapshot = await getDocs(collection(db, "organizations"));
+
         snapshot.forEach(doc => {
-            const opt = document.createElement("option");
-            opt.value = doc.id;
-            opt.textContent = doc.data().name;
-            orgSelect.appendChild(opt);
+            const org = doc.data();
+            if (org.uid === user.uid) { // 👈 only show user's orgs
+                const opt = document.createElement("option");
+                opt.value = doc.id;
+                opt.textContent = org.name;
+                orgSelect.appendChild(opt);
+            }
         });
     }
 
@@ -147,6 +159,7 @@
         } else {
             const orgRef = collection(db, "organizations");
             const newOrg = await addDoc(orgRef, {
+                uid: user.uid, // tie to user
                 name: document.getElementById("org-name").value,
                 address: document.getElementById("org-address").value,
                 contact: {
