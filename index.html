@@ -23,15 +23,13 @@
     </div>
 
     <form id="log-form">
-        <label>Date: <input type="date" id="log-date" required /></label><br/>
-        <label>Hours: <input type="number" id="log-hours" min="1" required /></label><br/>
-        <label>Organization Name: <input type="text" id="org-name" required /></label><br/>
-        <label>Address: <input type="text" id="org-address" required /></label><br/>
-        <label>Contact First Name: <input type="text" id="contact-first" /></label><br/>
-        <label>Contact Last Name: <input type="text" id="contact-last" /></label><br/>
-        <label>Title: <input type="text" id="contact-title" /></label><br/>
-        <label>Email: <input type="email" id="contact-email" /></label><br/>
-        <label>Phone: <input type="tel" id="contact-phone" /></label><br/>
+        <label>Organization Name: <input type="text" id="org-name" readonly /></label><br/>
+        <label>Organization Address: <input type="text" id="org-address" readonly /></label><br/>
+        <label>Contact First Name: <input type="text" id="contact-first" readonly /></label><br/>
+        <label>Contact Last Name: <input type="text" id="contact-last" readonly /></label><br/>
+        <label>Contact Title: <input type="text" id="contact-title" readonly /></label><br/>
+        <label>Contact Email: <input type="email" id="contact-email" readonly /></label><br/>
+        <label>Contact Phone: <input type="tel" id="contact-phone" readonly /></label><br/>
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -96,61 +94,51 @@
 
     });
 
-    import { getFirestore, collection, addDoc, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
-    const db = getFirestore(app);
+    const orgSelect = document.getElementById("org-select");
 
-    document.getElementById("org-select").addEventListener("change", (e) => {
-        const isNew = e.target.value === "";
-        document.getElementById("new-org-fields").style.display = isNew ? "block" : "none";
-    });
+    orgSelect.addEventListener("change", async (e) => {
+        const orgId = e.target.value;
+        const isNew = orgId === "";
+        const fields = [
+            "org-name", "org-address",
+            "contact-first", "contact-last",
+            "contact-title", "contact-email", "contact-phone"
+        ];
 
-    document.getElementById("log-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
+        document.getElementById("new-org-fields").style.display = "block";
 
-        const user = auth.currentUser;
-        if (!user) {
-            alert("Please log in first.");
-            return;
-        }
-
-        const orgSelect = document.getElementById("org-select");
-        const selectedOrg = orgSelect.value;
-        let orgId;
-
-        if (selectedOrg) {
-            orgId = selectedOrg; // Existing organization
-        } else {
-            const orgName = document.getElementById("org-name").value;
-            const orgAddress = document.getElementById("org-address").value;
-            const contact = {
-                firstName: document.getElementById("contact-first").value,
-                lastName: document.getElementById("contact-last").value,
-                title: document.getElementById("contact-title").value,
-                email: document.getElementById("contact-email").value,
-                phone: document.getElementById("contact-phone").value
-            };
-
-            const orgRef = collection(db, "organizations");
-            const newOrg = await addDoc(orgRef, {
-                name: orgName,
-                address: orgAddress,
-                contact
+        if (isNew) {
+            // Clear & make editable
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = "";
+                input.readOnly = false;
             });
-            orgId = newOrg.id;
+        } else {
+            // Fetch org info and populate fields
+            const orgDoc = await getDoc(doc(db, "organizations", orgId));
+            if (orgDoc.exists()) {
+                const org = orgDoc.data();
+                document.getElementById("org-name").value = org.name || "";
+                document.getElementById("org-address").value = org.address || "";
+
+                const contact = org.contact || {};
+                document.getElementById("contact-first").value = contact.firstName || "";
+                document.getElementById("contact-last").value = contact.lastName || "";
+                document.getElementById("contact-title").value = contact.title || "";
+                document.getElementById("contact-email").value = contact.email || "";
+                document.getElementById("contact-phone").value = contact.phone || "";
+
+                // Make fields read-only
+                fields.forEach(id => {
+                    document.getElementById(id).readOnly = true;
+                });
+            }
         }
-
-        await addDoc(collection(db, "users", user.uid, "hours"), {
-            date: document.getElementById("log-date").value,
-            hours: parseFloat(document.getElementById("log-hours").value),
-            organizationId: orgId,
-            notes: "",
-            timestamp: new Date()
-        });
-
-        alert("Service hours logged!");
-        document.getElementById("log-form").reset();
     });
+
 
 
 </script>
