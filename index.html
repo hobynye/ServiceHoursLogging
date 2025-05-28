@@ -1,25 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Service Hours Logging</title>
-</head>
 <body>
 <h1>Volunteer Service Hours</h1>
 <button onclick="login()">Login with Google</button>
 <button onclick="logout()">Logout</button>
-
 <p id="user-info"></p>
 
-<!-- ✅ Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 
-<!-- Your Firebase config and app logic (deferred so they run AFTER page + SDKs are ready) -->
-<script defer src="firebase-config.js"></script>
-<script defer src="app.js"></script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyA4vFPt7AllttEVTccPqx2mUkq3djDAX_M",
+        authDomain: "hoby-ny-east-service-hours.firebaseapp.com",
+        projectId: "hoby-ny-east-service-hours",
+        storageBucket: "hoby-ny-east-service-hours.firebasestorage.app",
+        messagingSenderId: "570357288484",
+        appId: "1:570357288484:web:ffd7fc0cd0a880db46d2b1",
+        measurementId: "G-J5BP1KY64B"
+    };
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                document.getElementById("user-info").textContent = `Hello, ${result.user.displayName}`;
+                console.log("Signed in:", result.user);
+            })
+            .catch((error) => console.error("Login error:", error));
+    };
+
+    window.logout = () => {
+        signOut(auth)
+            .then(() => {
+                document.getElementById("user-info").textContent = "";
+                console.log("Logged out");
+            })
+            .catch((error) => console.error("Logout error:", error));
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById("user-info").textContent = `Welcome back, ${user.displayName}`;
+        }
+    });
+</script>
 </body>
-</html>
