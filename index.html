@@ -2,6 +2,21 @@
 <h1>Volunteer Service Hours</h1>
 <button onclick="login()">Login with Google</button>
 <button onclick="logout()">Logout</button>
+
+<h2>Log Service Hours</h2>
+<form id="log-form">
+    <label>Date: <input type="date" id="log-date" required /></label><br/>
+    <label>Hours: <input type="number" id="log-hours" min="1" required /></label><br/>
+    <label>Organization Name: <input type="text" id="org-name" required /></label><br/>
+    <label>Address: <input type="text" id="org-address" required /></label><br/>
+    <label>Contact First Name: <input type="text" id="contact-first" /></label><br/>
+    <label>Contact Last Name: <input type="text" id="contact-last" /></label><br/>
+    <label>Title: <input type="text" id="contact-title" /></label><br/>
+    <label>Email: <input type="email" id="contact-email" /></label><br/>
+    <label>Phone: <input type="tel" id="contact-phone" /></label><br/>
+    <button type="submit">Submit</button>
+</form>
+
 <p id="user-info"></p>
 
 <script type="module">
@@ -45,5 +60,60 @@
             document.getElementById("user-info").textContent = `Welcome back, ${user.displayName}`;
         }
     });
+
+    import { getFirestore, collection, addDoc, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    const db = getFirestore(app);
+
+    document.getElementById("log-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user) {
+            alert("Please log in first.");
+            return;
+        }
+
+        // Gather form data
+        const orgName = document.getElementById("org-name").value;
+        const orgAddress = document.getElementById("org-address").value;
+        const contact = {
+            firstName: document.getElementById("contact-first").value,
+            lastName: document.getElementById("contact-last").value,
+            title: document.getElementById("contact-title").value,
+            email: document.getElementById("contact-email").value,
+            phone: document.getElementById("contact-phone").value
+        };
+
+        // 1. Add or find organization by name
+        const orgRef = collection(db, "organizations");
+        const orgQuery = query(orgRef, where("name", "==", orgName));
+        const orgSnapshot = await getDocs(orgQuery);
+
+        let orgId;
+        if (!orgSnapshot.empty) {
+            orgId = orgSnapshot.docs[0].id;
+        } else {
+            const newOrg = await addDoc(orgRef, {
+                name: orgName,
+                address: orgAddress,
+                contact
+            });
+            orgId = newOrg.id;
+        }
+
+        // 2. Add service log to user subcollection
+        await addDoc(collection(db, "users", user.uid, "hours"), {
+            date: document.getElementById("log-date").value,
+            hours: parseFloat(document.getElementById("log-hours").value),
+            organizationId: orgId,
+            notes: "",
+            timestamp: new Date()
+        });
+
+        alert("Service hours logged!");
+        document.getElementById("log-form").reset();
+    });
+
 </script>
 </body>
