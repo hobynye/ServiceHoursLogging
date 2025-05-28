@@ -2,44 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Volunteer Service Tracker</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Service Hours Logging</title>
 </head>
 <body>
-<div id="auth-section">
-    <button onclick="login()">Login with Google</button>
-    <button onclick="logout()">Logout</button>
-    <p id="user-info"></p>
-</div>
+<h1>Volunteer Service Hours</h1>
+<button onclick="login()">Login with Google</button>
+<button onclick="logout()">Logout</button>
 
-<div id="forms-section" style="display:none;">
-    <h2>Log Service Hours</h2>
-    <form id="hours-form">
-        <input type="date" id="date" required />
-        <input type="number" id="hours" placeholder="Hours" required />
-        <textarea id="description" placeholder="Description" required></textarea>
-        <select id="organization-select"></select>
-        <button type="submit">Log Hours</button>
-    </form>
+<p id="user-info"></p>
 
-    <h2>Add Organization</h2>
-    <form id="org-form">
-        <input type="text" id="org-name" placeholder="Organization Name" required />
-        <input type="text" id="org-address" placeholder="Address" required />
-        <input type="text" id="contact-first" placeholder="Contact First Name" required />
-        <input type="text" id="contact-last" placeholder="Contact Last Name" required />
-        <input type="text" id="contact-title" placeholder="Title" required />
-        <input type="email" id="contact-email" placeholder="Email" required />
-        <input type="tel" id="contact-phone" placeholder="Phone" required />
-        <button type="submit">Add Organization</button>
-    </form>
-</div>
-
+<!-- ✅ Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+
+<!-- ✅ Firebase config file -->
 <script src="firebase-config.js"></script>
+
+<!-- ✅ Your app logic (after firebase is defined) -->
 <script src="app.js"></script>
 </body>
 </html>

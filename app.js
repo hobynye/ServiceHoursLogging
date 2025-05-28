@@ -1,3 +1,4 @@
+/*
 auth.onAuthStateChanged(user => {
     if (user) {
         document.getElementById('forms-section').style.display = 'block';
@@ -71,4 +72,29 @@ async function loadOrganizations() {
         option.textContent = doc.data().name;
         select.appendChild(option);
     });
+}
+*/
+
+function login() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            const user = result.user;
+            document.getElementById("user-info").textContent = `Hello, ${user.displayName}`;
+            console.log("Logged in:", user);
+        })
+        .catch((error) => {
+            console.error("Login error:", error);
+        });
+}
+
+function logout() {
+    firebase.auth().signOut()
+        .then(() => {
+            document.getElementById("user-info").textContent = "";
+            console.log("Logged out");
+        })
+        .catch((error) => {
+            console.error("Logout error:", error);
+        });
 }
