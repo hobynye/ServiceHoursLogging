@@ -28,6 +28,9 @@
         <div id="new-org-fields">
             <label>Organization Name: <input type="text" id="org-name" /></label><br/>
             <label>Address: <input type="text" id="org-address"  /></label><br/>
+            <label>City: <input type="text" id="org-city"  /></label><br/>
+            <label>State: <input type="text" id="org-state"  /></label><br/>
+            <label>Zip: <input type="text" id="org-zip"  /></label><br/>
             <label>Contact First Name: <input type="text" id="contact-first"  /></label><br/>
             <label>Contact Last Name: <input type="text" id="contact-last"  /></label><br/>
             <label>Title: <input type="text" id="contact-title"  /></label><br/>
@@ -119,7 +122,7 @@
         const orgId = e.target.value;
         const isNew = orgId === "";
         const fields = [
-            "org-name", "org-address",
+            "org-name", "org-address", "org-city", "org-state", "org-zip",
             "contact-first", "contact-last",
             "contact-title", "contact-email", "contact-phone"
         ];
@@ -139,6 +142,9 @@
                 const org = docSnap.data();
                 document.getElementById("org-name").value = org.name || "";
                 document.getElementById("org-address").value = org.address || "";
+                document.getElementById("org-city").value = org.city || "";
+                document.getElementById("org-state").value = org.state || "";
+                document.getElementById("org-zip").value = org.zip || "";
                 const c = org.contact || {};
                 document.getElementById("contact-first").value = c.firstName || "";
                 document.getElementById("contact-last").value = c.lastName || "";
@@ -174,6 +180,9 @@
                 uid: auth.currentUser.uid,
                 name: orgRef.value,
                 address: orgRef.value,
+                city: orgRef.city,
+                state: orgRef.state,
+                zip: orgRef.zip,
                 contact: {
                     firstName: orgRef.value,
                     lastName: orgRef.value,
