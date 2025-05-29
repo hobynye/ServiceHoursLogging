@@ -179,18 +179,19 @@
         } else {
             const orgRef = await addDoc(collection(db, "organizations"), {
                 uid: auth.currentUser.uid,
-                name: orgRef.value,
-                address: orgRef.value,
-                city: orgRef.city,
-                state: orgRef.state,
-                zip: orgRef.zip,
+                name: document.getElementById("org-name").value,
+                address: document.getElementById("org-address").value,
+                city: document.getElementById("org-city").value,
+                state: document.getElementById("org-state").value,
+                zip: document.getElementById("org-zip").value,
                 contact: {
-                    firstName: orgRef.value,
-                    lastName: orgRef.value,
-                    title: orgRef.value,
-                    email: orgRef.value,
-                    phone: orgRef.value
+                    firstName: document.getElementById("contact-first").value,
+                    lastName: document.getElementById("contact-last").value,
+                    title: document.getElementById("contact-title").value,
+                    email: document.getElementById("contact-email").value,
+                    phone: document.getElementById("contact-phone").value
                 }
+            });
             });
             orgId = orgRef.id;
             await populateOrganizations();
