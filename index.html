@@ -126,26 +126,6 @@
 
         document.getElementById("new-org-fields").style.display = "block";
 
-        if (orgSelect.value === "") {
-            // Enable all organization form fields
-            orgNameInput.disabled = false;
-            orgAddressInput.disabled = false;
-            contactFirstInput.disabled = false;
-            contactLastInput.disabled = false;
-            contactTitleInput.disabled = false;
-            contactEmailInput.disabled = false;
-            contactPhoneInput.disabled = false;
-
-            // Clear the values
-            orgNameInput.value = "";
-            orgAddressInput.value = "";
-            contactFirstInput.value = "";
-            contactLastInput.value = "";
-            contactTitleInput.value = "";
-            contactEmailInput.value = "";
-            contactPhoneInput.value = "";
-        }
-
         if (isNew) {
             fields.forEach(id => {
                 const el = document.getElementById(id);
@@ -192,14 +172,14 @@
             const orgRef = collection(db, "organizations");
             const newOrg = {
                 uid: auth.currentUser.uid,
-                name: orgNameInput.value,
-                address: orgAddressInput.value,
+                name: orgRef.value,
+                address: orgRef.value,
                 contact: {
-                    firstName: contactFirstInput.value,
-                    lastName: contactLastInput.value,
-                    title: contactTitleInput.value,
-                    email: contactEmailInput.value,
-                    phone: contactPhoneInput.value
+                    firstName: orgRef.value,
+                    lastName: orgRef.value,
+                    title: orgRef.value,
+                    email: orgRef.value,
+                    phone: orgRef.value
                 }
             };
             orgId = newOrg.id;
