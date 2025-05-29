@@ -126,6 +126,26 @@
 
         document.getElementById("new-org-fields").style.display = "block";
 
+        if (orgSelect.value === "") {
+            // Enable all organization form fields
+            orgNameInput.disabled = false;
+            orgAddressInput.disabled = false;
+            contactFirstInput.disabled = false;
+            contactLastInput.disabled = false;
+            contactTitleInput.disabled = false;
+            contactEmailInput.disabled = false;
+            contactPhoneInput.disabled = false;
+
+            // Clear the values
+            orgNameInput.value = "";
+            orgAddressInput.value = "";
+            contactFirstInput.value = "";
+            contactLastInput.value = "";
+            contactTitleInput.value = "";
+            contactEmailInput.value = "";
+            contactPhoneInput.value = "";
+        }
+
         if (isNew) {
             fields.forEach(id => {
                 const el = document.getElementById(id);
