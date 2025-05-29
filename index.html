@@ -92,17 +92,24 @@
         const user = auth.currentUser;
         const orgSelect = document.getElementById("org-select");
         orgSelect.innerHTML = `<option value="">-- Add new organization --</option>`;
+
         const snapshot = await getDocs(collection(db, "organizations"));
 
         snapshot.forEach(doc => {
             const org = doc.data();
-            if (org.uid === user.uid) { // 👈 only show user's orgs
+            if (org.uid === user.uid) {
                 const opt = document.createElement("option");
                 opt.value = doc.id;
                 opt.textContent = org.name;
                 orgSelect.appendChild(opt);
             }
         });
+
+        // 👇 Auto-select "Add new organization" if user has no orgs
+        if (orgSelect.options.length === 1) {
+            orgSelect.value = "";
+            orgSelect.dispatchEvent(new Event("change"));
+        }
     }
 
     document.getElementById("org-select").addEventListener("change", async (e) => {
@@ -158,18 +165,18 @@
             orgId = selectedOrg;
         } else {
             const orgRef = collection(db, "organizations");
-            const newOrg = await addDoc(orgRef, {
-                uid: user.uid, // tie to user
-                name: document.getElementById("org-name").value,
-                address: document.getElementById("org-address").value,
+            const newOrg = {
+                uid: auth.currentUser.uid,
+                name: orgNameInput.value,
+                address: orgAddressInput.value,
                 contact: {
-                    firstName: document.getElementById("contact-first").value,
-                    lastName: document.getElementById("contact-last").value,
-                    title: document.getElementById("contact-title").value,
-                    email: document.getElementById("contact-email").value,
-                    phone: document.getElementById("contact-phone").value,
+                    firstName: contactFirstInput.value,
+                    lastName: contactLastInput.value,
+                    title: contactTitleInput.value,
+                    email: contactEmailInput.value,
+                    phone: contactPhoneInput.value
                 }
-            });
+            };
             orgId = newOrg.id;
             await populateOrganizations();
             document.getElementById("org-select").value = orgId;
