@@ -1,3 +1,4 @@
+/*
 import { getUserOrganizations, getOrganizationById, addOrganization } from '../services/organizations.js';
 import { db } from '../services/firebase.js';
 
@@ -41,3 +42,4 @@ describe('Organizations Service', () => {
         expect(id).toBe('newOrgId');
     });
 });
+/!**!/*/

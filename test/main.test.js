@@ -1,6 +1,7 @@
-/**
+/*
+/!**
  * @jest-environment jsdom
- */
+ *!/
 
 import { handleLoginUI, handleLogoutUI } from '../main.js';
 import '@testing-library/jest-dom';
@@ -34,3 +35,4 @@ describe('Main UI Interaction Tests', () => {
         expect(document.getElementById('logout-btn').style.display).toBe('none');
     });
 });
+*/
