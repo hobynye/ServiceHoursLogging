@@ -1,6 +1,6 @@
 // main.js
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { getFirestore, collection, addDoc, getDoc, getDocs, doc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDoc, getDocs, doc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 import { app } from './firebase.js';
 import { populateOrganizations, getOrgDataById } from './services/organizationService.js';
 
