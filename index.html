@@ -177,8 +177,7 @@
         if (selectedOrg) {
             orgId = selectedOrg;
         } else {
-            const orgRef = collection(db, "organizations");
-            const newOrg = {
+            const orgRef = await addDoc(collection(db, "organizations"), {
                 uid: auth.currentUser.uid,
                 name: orgRef.value,
                 address: orgRef.value,
@@ -192,8 +191,8 @@
                     email: orgRef.value,
                     phone: orgRef.value
                 }
-            };
-            orgId = newOrg.id;
+            });
+            orgId = orgRef.id;
             await populateOrganizations();
             document.getElementById("org-select").value = orgId;
         }
