@@ -95,9 +95,12 @@
 
         const snapshot = await getDocs(collection(db, "organizations"));
 
+        let hasOrganizations = false;
+
         snapshot.forEach(doc => {
             const org = doc.data();
             if (org.uid === user.uid) {
+                hasOrganizations = true;
                 const opt = document.createElement("option");
                 opt.value = doc.id;
                 opt.textContent = org.name;
@@ -105,8 +108,8 @@
             }
         });
 
-        // 👇 Auto-select "Add new organization" if user has no orgs
-        if (orgSelect.options.length === 1) {
+        // If the user has no organizations, select "Add new organization"
+        if (!hasOrganizations) {
             orgSelect.value = "";
             orgSelect.dispatchEvent(new Event("change"));
         }
