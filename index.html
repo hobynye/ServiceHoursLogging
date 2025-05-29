@@ -26,13 +26,13 @@
         </label><br/>
 
         <div id="new-org-fields">
-            <label>Organization Name: <input type="text" id="org-name" readonly /></label><br/>
-            <label>Address: <input type="text" id="org-address" readonly /></label><br/>
-            <label>Contact First Name: <input type="text" id="contact-first" readonly /></label><br/>
-            <label>Contact Last Name: <input type="text" id="contact-last" readonly /></label><br/>
-            <label>Title: <input type="text" id="contact-title" readonly /></label><br/>
-            <label>Email: <input type="email" id="contact-email" readonly /></label><br/>
-            <label>Phone: <input type="tel" id="contact-phone" readonly /></label><br/>
+            <label>Organization Name: <input type="text" id="org-name" /></label><br/>
+            <label>Address: <input type="text" id="org-address"  /></label><br/>
+            <label>Contact First Name: <input type="text" id="contact-first"  /></label><br/>
+            <label>Contact Last Name: <input type="text" id="contact-last"  /></label><br/>
+            <label>Title: <input type="text" id="contact-title"  /></label><br/>
+            <label>Email: <input type="email" id="contact-email"  /></label><br/>
+            <label>Phone: <input type="tel" id="contact-phone"  /></label><br/>
         </div>
 
         <button type="submit">Submit</button>
@@ -151,6 +151,7 @@
                 const el = document.getElementById(id);
                 el.value = "";
                 el.readOnly = false;
+                el.disabled = false;
             });
         } else {
             const docSnap = await getDoc(doc(db, "organizations", orgId));
@@ -167,6 +168,7 @@
 
                 fields.forEach(id => {
                     document.getElementById(id).readOnly = true;
+                    document.getElementById(id).disabled = true;
                 });
             }
         }
